@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html ng-app="resturant.robot">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.js"></script>
+    <script src="https://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.12.0.js"></script>
+    <script>
+    	angular.module('resturant.robot', ['ui.bootstrap']);
+    	angular.module('resturant.robot').controller('ResturantController', function ($scope,$interval) {
+		  $scope.tables = [
+		  	{'occupied':false,'disabled':false,'status':'empty'},
+		  	{'occupied':false,'disabled':false,'status':'empty'},
+		  	{'occupied':false,'disabled':false,'status':'empty'},
+		  	{'occupied':false,'disabled':false,'status':'empty'},
+		  	{'occupied':false,'disabled':false,'status':'empty'},
+		  	{'occupied':false,'disabled':false,'status':'empty'}
+		  ];
+
+		  $interval(doWorkSon,1000);
+
+		  $interval(randomSim,5000);
+
+		  $scope.orders = [];
+		  $scope.message = 'Idle';
+
+		  $scope.occupy = function(id) {
+	        $scope.tables[id].occupied = true;
+	        $scope.tables[id].status = 'occupied';
+	        $scope.tables[id].bill = 0;
+	        $scope.orders.push({'message':'Greet table '+(id+1),'id':id,type:'occupy'});
+		  };
+
+		  $scope.orderFood = function(id){
+		  	$scope.orders.push({'message':"Get Food order for table " + (id + 1),'id':id,type:'orderFood' });
+		  	$scope.tables[id].bill += Math.floor((Math.random() * 20) + 7);
+		  }
+
+		  $scope.orderDrink = function(id){
+		  	$scope.orders.push({'message':"Get Drink order for table " + (id + 1),'id':id,type:'orderDrink' });
+		  	$scope.tables[id].bill += Math.floor((Math.random() * 3) + 1);
+		  }
+
+
+		  $scope.paybill = function(id){
+		  	$scope.tables[id].bill = 0;
+		  	$scope.tables[id].occupied = false;
+		  	$scope.tables[id].disabled = true;
+		  	$scope.tables[id].status = 'pending';
+		  	$scope.orders.push({'message':"Grab check from table " + (id + 1),'id':id,type:'payCheck' });
+		  }
+
+		  $scope.status = {
+		    isWorking:false,
+		    processing:false
+		  };
+
+		  function randomSim(){
+		  	var id = Math.floor((Math.random() * 6));
+		  	var setOrder = false;
+
+		  	while(!setOrder){
+		  		console.log("Trying to set order for " + (id+1));
+		  		var status = $scope.tables[id].status;
+		  		if(status=='empty'){
+		  			$scope.occupy(id);
+		  			setOrder = true;
+		  		}else if(status=='occupied'){
+		  			if($scope.tables[id].bill > 0){
+		  				var choice = Math.floor((Math.random() * 3) + 1);
+		  				if(choice==1){
+		  					$scope.orderFood(id);
+		  					setOrder = true;
+		  				}else if(choice==2){
+		  					$scope.orderDrink(id);
+		  					setOrder = true;
+		  				}else{
+		  					$scope.paybill(id);
+		  					setOrder = true;
+		  				}
+		  			}else{
+		  				var choice = Math.floor((Math.random() * 2) + 1);
+		  				if(choice==1){
+		  					$scope.orderFood(id);
+		  					setOrder = true;
+		  				}else{
+		  					$scope.orderDrink(id);
+		  					setOrder = true;
+		  				}
+		  			}
+		  		}else{
+		  			var id = Math.floor((Math.random() * 6));
+		  		}
+		  	}
+		  }
+
+		  function doWorkSon(){
+		  	if(!$scope.status.isWorking){
+		  		if($scope.orders.length>0){
+		  			$scope.status.isWorking = true;
+		  			while($scope.orders.length>0){
+		  				if($scope.status.processing){
+		  					break;
+		  				}
+		  				var order = $scope.orders.shift();
+		  				$scope.status.processing = true;
+		  				$scope.message = order.message;
+		  				jQuery('.robot').animate({top:$('#table'+(order.id+1)).position().top,left:$('#table'+(order.id+1)).position().left},1500);
+
+						jQuery('.robot').animate({top:'430px',left:'250px'},1500,function(){
+							$scope.status.processing = false;
+							if(order.type=='payCheck'){
+								$scope.tables[order.id].disabled = false;
+								$scope.tables[order.id].status = 'empty';
+							}
+							$scope.message = 'Idle';
+						});
+		  			}
+		  			$scope.status.isWorking = false;
+		  		}
+
+		  	}
+		  }
+		});
+    </script>
+    <link href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+	
+</head>
+<body>
+	<div ng-controller="ResturantController">
+		<div class="row">
+			<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+				<div style="background:black; width:100%; height:500px;" >
+					<div id="table1" style="background:red; width: 50px;height:50px; top:100px; left:50px; position:fixed;">
+					</div>
+
+					<div id="table2" style="background:yellow; width: 50px; height:50px; top:100px; left:150px; position:fixed; z-index:1;">
+					</div>
+					<div id="table3" style="background:yellow; width: 50px; height:50px; top:100px; left:250px; position:fixed; z-index:1;">
+					</div>
+					<div id="table4" style="background:yellow; width: 50px; height:50px; top:200px; left:50px; position:fixed; z-index:1;">
+					</div>
+					<div id="table5" style="background:yellow; width: 50px; height:50px; top:200px; left:150px; position:fixed; z-index:1;">
+					</div>
+					<div id="table6" style="background:yellow; width: 50px; height:50px; top:200px; left:250px; position:fixed; z-index:1;">
+					</div>
+
+					<img class="robot" src="http://hackedgadgets.com/wp-content/shadow_robot_company_hand_c5_claw_back.jpg" height="70" width="70" style="z-index: 100; position:fixed; top:430px; left:250px;"/>
+
+				</div>
+				<div class="alert alert-info" role="alert"><h3>{{message}}</h3></div>
+			</div>
+			<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+				<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+					<div class="panel panel-primary">
+						<div class="panel-heading">
+							<h3 class="panel-title">Table 1 <div ng-show="tables[0].bill > 0"><span class="glyphicon glyphicon-usd"></span> {{tables[0].bill}}</div></h3>
+						</div>
+						<div class="panel-body">
+							<div class="btn-group-vertical" role="group" aria-label="...">
+								<button type="button" ng-hide="tables[0].occupied" ng-disabled="tables[0].disabled" class="btn btn-default" data-table="1" ng-click="occupy(0)">Occupy</button>
+								<button type="button" ng-show="tables[0].occupied" class="btn btn-default" data-table="1" ng-click="orderFood(0)">Order Food</button>
+								<button type="button" ng-show="tables[0].occupied" class="btn btn-default" data-table="1" ng-click="orderDrink(0)">Order Drink</button>
+								<button type="button" ng-show="tables[0].bill > 0" ng-click="paybill(0)" class="btn btn-success" data-table="1">Pay Bill</button>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+					<div class="panel panel-primary">
+						<div class="panel-heading">
+							<h3 class="panel-title">Table 2 <div ng-show="tables[1].bill > 0"><span class="glyphicon glyphicon-usd"></span> {{tables[1].bill}}</div></h3>
+						</div>
+						<div class="panel-body">
+							<div class="btn-group-vertical" role="group" aria-label="...">
+								<button type="button" ng-hide="tables[1].occupied" ng-disabled="tables[1].disabled" class="btn btn-default" data-table="2" ng-click="occupy(1)">Occupy</button>
+								<button type="button" ng-show="tables[1].occupied" class="btn btn-default" data-table="2" ng-click="orderFood(1)">Order Food</button>
+								<button type="button" ng-show="tables[1].occupied" class="btn btn-default" ng-click="orderDrink(1)" data-table="2">Order Drink</button>
+								<button type="button" ng-show="tables[1].bill > 0" ng-click="paybill(1)" class="btn btn-success" data-table="2">Pay Bill</button>
+							</div>
+						</div>
+					</div>
+				</div>	
+				<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+					<div class="panel panel-primary">
+						<div class="panel-heading">
+							<h3 class="panel-title">Table 3 <div ng-show="tables[2].bill > 0"><span class="glyphicon glyphicon-usd"></span> {{tables[2].bill}}</div></h3>
+						</div>
+						<div class="panel-body">
+							<div class="btn-group-vertical" role="group" aria-label="...">
+								<button type="button" ng-hide="tables[2].occupied" ng-disabled="tables[2].disabled" class="btn btn-default" data-table="3" ng-click="occupy(2)">Occupy</button>
+								<button type="button" ng-show="tables[2].occupied" class="btn btn-default" data-table="3" ng-click="orderFood(2)">Order Food</button>
+								<button type="button" ng-show="tables[2].occupied" class="btn btn-default" data-table="3" ng-click="orderDrink(2)">Order Drink</button>
+								<button type="button" ng-show="tables[2].bill > 0" ng-click="paybill(2)" class="btn btn-success" data-table="3">Pay Bill</button>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+					<div class="panel panel-primary">
+						<div class="panel-heading">
+							<h3 class="panel-title">Table 4 <div ng-show="tables[3].bill > 0"><span class="glyphicon glyphicon-usd"></span> {{tables[3].bill}}</div></h3>
+						</div>
+						<div class="panel-body">
+							<div class="btn-group-vertical" role="group" aria-label="...">
+								<button type="button" ng-hide="tables[3].occupied" ng-disabled="tables[3].disabled" class="btn btn-default" data-table="4" ng-click="occupy(3)">Occupy</button>
+								<button type="button" ng-show="tables[3].occupied" class="btn btn-default" data-table="4" ng-click="orderFood(3)">Order Food</button>
+								<button type="button" ng-show="tables[3].occupied" class="btn btn-default" data-table="4" ng-click="orderDrink(3)">Order Drink</button>
+								<button type="button" ng-show="tables[3].bill > 0" ng-click="paybill(3)" class="btn btn-success" data-table="4">Pay Bill</button>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+					<div class="panel panel-primary">
+						<div class="panel-heading">
+							<h3 class="panel-title">Table 5 <div ng-show="tables[4].bill > 0"><span class="glyphicon glyphicon-usd"></span> {{tables[4].bill}}</div></h3>
+						</div>
+						<div class="panel-body">
+							<div class="btn-group-vertical" role="group" aria-label="...">
+								<button type="button" ng-hide="tables[4].occupied" ng-disabled="tables[4].disabled" class="btn btn-default" data-table="5" ng-click="occupy(4)">Occupy</button>
+								<button type="button" ng-show="tables[4].occupied" class="btn btn-default" data-table="5" ng-click="orderFood(4)">Order Food</button>
+								<button type="button" ng-show="tables[4].occupied" class="btn btn-default" data-table="5" ng-click="orderDrink(4)">Order Drink</button>
+								<button type="button" ng-show="tables[4].bill > 0" ng-click="paybill(4)" class="btn btn-success" data-table="5">Pay Bill</button>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+					<div class="panel panel-primary">
+						<div class="panel-heading">
+							<h3 class="panel-title">Table 6 <div ng-show="tables[5].bill > 0"><span class="glyphicon glyphicon-usd"></span> {{tables[5].bill}}</div></h3>
+						</div>
+						<div class="panel-body">
+							<div class="btn-group-vertical" role="group" aria-label="...">
+								<button type="button" ng-hide="tables[5].occupied" ng-disabled="tables[5].disabled" class="btn btn-default occupy" data-table="6" ng-click="occupy(5)">Occupy</button>
+								<button type="button" ng-show="tables[5].occupied" class="btn btn-default" data-table="6" ng-click="orderFood(5)">Order Food</button>
+								<button type="button" ng-show="tables[5].occupied" class="btn btn-default" data-table="6" ng-click="orderDrink(5)">Order Drink</button>
+								<button type="button" ng-show="tables[5].bill > 0" ng-click="paybill(5)" class="btn btn-success" data-table="6">Pay Bill</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+				<div class="list-group">
+				  <a href="#" class="list-group-item" ng-repeat="order in orders">{{order.message}}</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+
+
+
+<script type="text/javascript">
+	// var queue = []; 
+	// $('.occupy').click(function(){
+	// 	var panel = $(this).parent().parent().parent();
+	// 	panel.removeClass('panel-primary').addClass('panel-success');
+	// 	queue.push({'message':'Greet Table' + $(this).attr('table'),'table':$(this).attr('table') });
+	// });
+
+
+	// jQuery('.occupy.table1').click(function(){
+	// 	jQuery('#table1').css({"border-color": "white", 
+ //             "border-width":"3px", 
+ //             "border-style":"solid"});
+	// 	jQuery('.orderDrink.table1').show();
+	// 	jQuery('.orderFood.table1').show();
+	// 	jQuery('.occupy.table1').hide();
+	// 	// jQuery('.robot').animate({top:$('#table1').position().top,left:$('#table1').position().left});
+	// 	// jQuery('.robot').animate({top:'430px',left:'250px'});
+	// });
+
+	// jQuery('.orderDrink.table1').click(function(){
+	// 	jQuery('.robot').animate({top:$('#table1').position().top,left:$('#table1').position().left},700);
+	// 	jQuery('.robot').animate({top:'430px',left:'250px'},700);
+	// 	jQuery('.payCheck.table1').show();
+	// });
+
+	// jQuery('.orderFood.table1').click(function(){
+	// 	jQuery('.robot').animate({top:$('#table1').position().top,left:$('#table1').position().left},700);
+	// 	jQuery('.robot').animate({top:'430px',left:'250px'},700);
+	// 	jQuery('.payCheck.table1').show();
+	// });
+
+	// jQuery('.payCheck.table1').click(function(){
+	// 	jQuery('.robot').animate({top:$('#table1').position().top,left:$('#table1').position().left},700);
+	// 	jQuery('#table1').css({"border":"none"});
+	// 	jQuery('.robot').animate({top:'430px',left:'250px'},700);
+	// 	jQuery('.orderDrink.table1').hide();
+	// 	jQuery('.orderFood.table1').hide();
+	// 	jQuery('.payCheck.table1').hide();
+	// 	jQuery('.occupy.table1').show();
+	// })
+
+
+
+
+
+</script>
+
+</body>
+</html>
