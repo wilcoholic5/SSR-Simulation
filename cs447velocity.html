@@ -60,39 +60,37 @@
 		  	var id = Math.floor((Math.random() * 6));
 		  	var setOrder = false;
 
-		  	while(!setOrder){
-		  		console.log("Trying to set order for " + (id+1));
-		  		var status = $scope.tables[id].status;
-		  		if(status=='empty'){
-		  			$scope.occupy(id);
-		  			setOrder = true;
-		  		}else if(status=='occupied'){
-		  			if($scope.tables[id].bill > 0){
-		  				var choice = Math.floor((Math.random() * 3) + 1);
-		  				if(choice==1){
-		  					$scope.orderFood(id);
-		  					setOrder = true;
-		  				}else if(choice==2){
-		  					$scope.orderDrink(id);
-		  					setOrder = true;
-		  				}else{
-		  					$scope.paybill(id);
-		  					setOrder = true;
-		  				}
-		  			}else{
-		  				var choice = Math.floor((Math.random() * 2) + 1);
-		  				if(choice==1){
-		  					$scope.orderFood(id);
-		  					setOrder = true;
-		  				}else{
-		  					$scope.orderDrink(id);
-		  					setOrder = true;
-		  				}
-		  			}
-		  		}else{
-		  			var id = Math.floor((Math.random() * 6));
-		  		}
-		  	}
+	  		console.log("Trying to set order for " + (id+1));
+	  		var status = $scope.tables[id].status;
+	  		if(status=='empty'){
+	  			$scope.occupy(id);
+	  			setOrder = true;
+	  		}else if(status=='occupied'){
+	  			if($scope.tables[id].bill > 0){
+	  				var choice = Math.floor((Math.random() * 3) + 1);
+	  				if(choice==1){
+	  					$scope.orderFood(id);
+	  					setOrder = true;
+	  				}else if(choice==2){
+	  					$scope.orderDrink(id);
+	  					setOrder = true;
+	  				}else{
+	  					$scope.paybill(id);
+	  					setOrder = true;
+	  				}
+	  			}else{
+	  				var choice = Math.floor((Math.random() * 2) + 1);
+	  				if(choice==1){
+	  					$scope.orderFood(id);
+	  					setOrder = true;
+	  				}else{
+	  					$scope.orderDrink(id);
+	  					setOrder = true;
+	  				}
+	  			}
+	  		}else{
+	  			var id = Math.floor((Math.random() * 6));
+	  		}
 		  }
 
 		  function doWorkSon(){
