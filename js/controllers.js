@@ -106,7 +106,7 @@ angular.module('resturant.robot').controller('ResturantController', function ($s
 					$scope.message = order.message;
 					jQuery('.robot').animate({top:$('#table'+(order.id+1)).position().top,left:$('#table'+(order.id+1)).position().left},1500);
 
-					jQuery('.robot').animate({top:'430px',left:'250px'},1500,function(){
+					jQuery('.robot').animate({top:'400px',left:'250px'},1500,function(){
 						$scope.status.processing = false;
 						if(order.type=='payCheck'){
 							$scope.tables[order.id].disabled = false;
