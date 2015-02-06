@@ -1,0 +1,1 @@
+angular.module('resturant.robot', ['ui.bootstrap']);
