@@ -13,11 +13,12 @@ angular.module('resturant.robot').controller('ResturantController', function ($s
 
 	var promise = $interval(randomSim,5000);
 
+	$scope.food = ["Pepperoni Pizza", "Fried Chicken", "Alfredo Pasta", "Triple Cheeseburger", "Ice Cream"];
+	$scope.drinks = ["Coca-Cola", "Water", "Tea", "Sprite", "Milkshake"];
 	$scope.orders = [];
 	$scope.message = 'Idle';
 	$scope.intervals = [{'name':'Busy','interval':500},{'name':'Moderate','interval':1000},{'name':'Slow','interval':5000}];
 	$scope.currentInterval = 5000;
-
 
 	$scope.occupy = function(id) {
 		$scope.tables[id].occupied = true;
@@ -27,12 +28,12 @@ angular.module('resturant.robot').controller('ResturantController', function ($s
 	};
 
 	$scope.orderFood = function(id){
-		$scope.orders.push({'message':"Get Food order for table " + (id + 1),'id':id,type:'orderFood' });
+		$scope.orders.push({'message':"Get " + $scope.food[Math.floor(Math.random()* $scope.food.length)] + " for table " + (id + 1),'id':id,type:'orderFood' });
 		$scope.tables[id].bill += Math.floor((Math.random() * 20) + 7);
 	}
 
 	$scope.orderDrink = function(id){
-		$scope.orders.push({'message':"Get Drink order for table " + (id + 1),'id':id,type:'orderDrink' });
+		$scope.orders.push({'message':"Get " + $scope.drinks[Math.floor(Math.random()* $scope.drinks.length)] + " for table " + (id + 1),'id':id,type:'orderDrink' });
 		$scope.tables[id].bill += Math.floor((Math.random() * 3) + 1);
 	}
 
