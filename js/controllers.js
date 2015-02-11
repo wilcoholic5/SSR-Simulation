@@ -104,8 +104,10 @@ angular.module('resturant.robot').controller('ResturantController', function ($s
 					var order = $scope.orders.shift();
 					$scope.status.processing = true;
 					$scope.message = order.message;
-					jQuery('.robot').animate({top:$('#table'+(order.id+1)).position().top,left:$('#table'+(order.id+1)).position().left},1500);
 
+					jQuery('.robot').animate({top:'400px',left:$('#table'+(order.id+1)).position().left},1500);
+					jQuery('.robot').animate({top:$('#table'+(order.id+1)).position().top,left:$('#table'+(order.id+1)).position().left},1500);
+					jQuery('.robot').animate({top:'400px',left:$('#table'+(order.id+1)).position().left},1500);
 					jQuery('.robot').animate({top:'400px',left:'250px'},1500,function(){
 						$scope.status.processing = false;
 						if(order.type=='payCheck'){
