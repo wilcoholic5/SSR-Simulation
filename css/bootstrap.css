@@ -2360,10 +2360,23 @@ input[type="reset"].btn-block,
 input[type="button"].btn-block {
   width: 100%;
 }
-.face {
-  margin-top: -75px;
+.face, .angry {
+  margin-top: -40px;
   height: 35px;
   width: 35px;
+  position:absolute;
+}
+
+.kitchen{
+	height:80px;
+	width:80px;
+	z-index:10;
+	position:relative;
+	background-image: url('../img/kitchen.png');
+	background-size: 80px 80px;
+	background-repeat:no-repeat;
+	top: 400px;
+	left:250px;
 }
 
 .robot{
@@ -2371,8 +2384,15 @@ input[type="button"].btn-block {
   width: 70px;
   z-index: 100;
   position:relative;
-  top:400px;
+  /*top:400px;
   left:250px;
+  */
+}
+
+.kitchen #kitchenCounter{
+	height:80px;
+	width:80px;
+	position:absolute;
 }
 
 .robot #robotArm{
@@ -2381,7 +2401,7 @@ input[type="button"].btn-block {
 	position:absolute;
 }
 
-.robot #fullPlate, .robot #emptyPlate, .robot #fullCup, .robot #emptyCup{
+.robot #fullPlate, .robot #emptyPlate, .robot #fullCup, .robot #emptyCup, .robot #bill{
 	width: 30px;
 	height: 30px;
 	position: absolute;
@@ -2409,7 +2429,7 @@ input[type="button"].btn-block {
 .tableImg1{
 	width: 50px;
 	height: 50px;
-	margin-top: -20px;
+	margin-top: -0px;
 }
 
 #table2{

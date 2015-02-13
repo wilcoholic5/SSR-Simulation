@@ -109,33 +109,45 @@
 			<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
 				<div id = "blackbox" >
 					<div id="table1">
-					<img class="face" src="img/face.png"/>
-					<img class="tableImg1" src='img/table.png'/>
+						<img class="face" src="img/face.png" ng-show="tables[0].occupied"/>
+						<img class="angry" src="img/angry.png" ng-show="tables[0].status == 'pending'"/>
+						<img class="tableImg1" src='img/table.png'/>
 					</div>
 					<div id="table2">
-					<img class="face" src="img/face.png"/>
-					<img class="tableImg1" src='img/table.png'/>
+						<img class="face" src="img/face.png"  ng-show="tables[1].occupied"/>
+						<img class="angry" src="img/angry.png" ng-show="tables[1].status == 'pending'"/>
+						<img class="tableImg1" src='img/table.png'/>
 					</div>
 					<div id="table3">
-					<img class="face" src="img/face.png"/>
-					<img class="tableImg1" src='img/table.png'/>
+						<img class="face" src="img/face.png" ng-show="tables[2].occupied"/>
+						<img class="angry" src="img/angry.png" ng-show="tables[2].status == 'pending'"/>
+						<img class="tableImg1" src='img/table.png'/>
 					</div>
 					<div id="table4">
-					<img class="face" src="img/face.png"/>
-					<img class="tableImg1" src='img/table.png'/>
+						<img class="face" src="img/face.png" ng-show="tables[3].occupied"/>
+						<img class="angry" src="img/angry.png" ng-show="tables[3].status == 'pending'"/>
+						<img class="tableImg1" src='img/table.png'/>
 					</div>
 					<div id="table5">
-					<img class="face" src="img/face.png"/>
-					<img class="tableImg1" src='img/table.png'/>
+						<img class="face" src="img/face.png" ng-show="tables[4].occupied"/>
+						<img class="angry" src="img/angry.png" ng-show="tables[4].status == 'pending'"/>
+						<img class="tableImg1" src='img/table.png'/>
 					</div>
 					<div id="table6">
-					<img class="face" src="img/face.png"/>
-					<img class="tableImg1" src='img/table.png'/>
+						<img class="face" src="img/face.png" ng-show="tables[5].occupied"/>
+						<img class="angry" src="img/angry.png" ng-show="tables[5].status == 'pending'"/>
+						<img class="tableImg1" src='img/table.png'/>
 					</div>
 					
-					<div class='robot'>
-					<img id="robotArm" src="img/robotArm.png"/>
+					<div class='kitchen'>
+						<img id="kitchenCounter" src="img/kitchen.png"/>
+						<div class='robot'>
+							<img id="robotArm" src="img/robotArm.png"/>
+						</div>
 					</div>
+					<audio style='display:none;' id='cash' preload='auto'>
+						<source src="sfx/cash.mp3"></source>
+					</audio>
 
 				</div>
 				<div class="alert alert-info" role="alert"><h3>{{message}}</h3></div>

@@ -9,9 +9,12 @@ angular.module('resturant.robot').controller('ResturantController', function ($s
 	];
 
 	var debug = false;
+	var playSounds = true;
 	$interval(doWorkSon,1000);
-
+	var cash = document.getElementById('cash');
 	var promise = $interval(randomSim,15000);
+	
+	$scope.tableID = ["#table1", "#table2", "#table3", "#table4", "#table5", "#table6"];
 
 	$scope.food = ["Pepperoni Pizza", "Fried Chicken", "Alfredo Pasta", "Triple Cheeseburger", "Ice Cream"];
 	$scope.drinks = ["Coca-Cola", "Water", "Tea", "Sprite", "Milkshake"];
@@ -113,8 +116,19 @@ angular.module('resturant.robot').controller('ResturantController', function ($s
 					}else if(order.type == 'orderDrink' && order.give == 'true'){
 						jQuery('.robot').append("<img src='img/fullCup.png' id='fullCup' />");
 					}
-					jQuery('.robot').animate({top:'400px',left:$('#table'+(order.id+1)).position().left},1500);
-					jQuery('.robot').animate({top:$('#table'+(order.id+1)).position().top,left:$('#table'+(order.id+1)).position().left},1500, function(){
+					// 400px
+					
+					var moveRight = Math.abs($('#table'+(order.id+1)).position().left - $('.kitchen').position().left);
+					var moveLeft = -1 * moveRight;
+					if(debug) alert('kitchen top '+ $('.kitchen').position().top);
+					var moveDown = Math.abs($('#table'+(order.id+1)).position().top - $('.kitchen').position().top);
+					var moveUp = -1 * moveDown;
+					if(debug) alert('movedown '+moveDown);
+					
+					jQuery('.robot').animate({left:moveLeft}, 1500);
+					//jQuery('.robot').animate({top:$('.kitchen').position().top,left:$('#table'+(order.id+1)).position().left},1500);
+					//jQuery('.robot').animate({top:$('#table'+(order.id+1)).position().top,left:$('#table'+(order.id+1)).position().left},1500, function(){
+					jQuery('.robot').animate({top:moveUp}, 1500, function(){
 						if((order.type == 'orderFood' || order.type == 'orderDrink') && order.give == 'true'){
 							if(debug) alert('remove plate');
 							jQuery('img:last-child', this).remove();
@@ -123,13 +137,19 @@ angular.module('resturant.robot').controller('ResturantController', function ($s
 							jQuery('.robot').append("<img src='img/emptyPlate.png' id='emptyPlate' />");
 						}else if(order.type == 'orderDrink' && order.give == 'false'){
 							jQuery('.robot').append("<img src='img/emptyCup.png' id='emptyCup' />");
+						}else if(order.type == 'payCheck'){
+							jQuery('.robot').append("<img src='img/bill.png' id='bill' />");
 						}
 					});
-					jQuery('.robot').animate({top:'400px',left:$('#table'+(order.id+1)).position().left},1500);
-					jQuery('.robot').animate({top:'400px',left:'250px'},1500,function(){
-						
+					//jQuery('.robot').animate({top:$('.kitchen').position().top,left:$('#table'+(order.id+1)).position().left},1500);
+					jQuery('.robot').animate({top:'+='+moveDown}, 1500);
+					//jQuery('.robot').animate({top:$('.kitchen').position().top,left:$('.kitchen').position().left},1500,function(){
+					jQuery('.robot').animate({left:'+='+moveRight}, 1500, function(){
 						if((order.type == 'orderFood' || order.type == "orderDrink") && order.give == 'false'){
 							jQuery('img:last-child', this).remove();
+						}else if(order.type == 'payCheck'){
+							jQuery('img:last-child', this).remove();
+							if(playSounds) cash.play();
 						}
 						
 						$scope.status.processing = false;
