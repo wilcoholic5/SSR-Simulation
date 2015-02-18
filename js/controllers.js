@@ -32,7 +32,7 @@ angular.module('resturant.robot').controller('ResturantController', function ($s
 
 	$scope.orderFood = function(id){
 		var foodItem = $scope.food[Math.floor(Math.random()* $scope.food.length)];
-		$scope.orders.push({'message':"Give " + foodItem  + " for table " + (id + 1) + "",'id':id,'type':'orderFood', 'give': 'true', 'item':foodItem, command:'Give', table:(id+1) });
+		$scope.orders.push({'message':"Give " + foodItem  + " for table " + (id + 1) + "",'id':id, type:'orderFood', 'give': 'true', 'item':foodItem, command:'Give', table:(id+1) });
 		$scope.tables[id].bill += Math.floor((Math.random() * 20) + 7);
 	}
 

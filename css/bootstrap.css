@@ -2389,15 +2389,15 @@ input[type="button"].btn-block {
   */
 }
 
-.foodItem {
+.orderFood{
 	color: #633E19;
 }
 
-.drinkItem{
+.orderDrink{
 	color: #3385FF;
 }
 
-.bill{
+.payCheck{
 	color: #2E8A2E;
 }
 
