@@ -2389,6 +2389,22 @@ input[type="button"].btn-block {
   */
 }
 
+.foodItem {
+	color: #633E19;
+}
+
+.drinkItem{
+	color: #3385FF;
+}
+
+.bill{
+	color: #2E8A2E;
+}
+
+.tableNum{
+	color: #D1D12B;
+}
+
 .kitchen #kitchenCounter{
 	height:80px;
 	width:80px;
