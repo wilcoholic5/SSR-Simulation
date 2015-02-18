@@ -27,18 +27,18 @@ angular.module('resturant.robot').controller('ResturantController', function ($s
 		$scope.tables[id].occupied = true;
 		$scope.tables[id].status = 'occupied';
 		$scope.tables[id].bill = 0;
-		$scope.orders.push({'message':"Greet table "+(id+1) + "",'id':id,type:'occupy'});
+		$scope.orders.push({'message':"Greet table "+(id+1) + "",'id':id,type:'occupy', command:'Greet', table:(id+1)});
 	};
 
 	$scope.orderFood = function(id){
 		var foodItem = $scope.food[Math.floor(Math.random()* $scope.food.length)];
-		$scope.orders.push({'message':"Give " + foodItem  + " for table " + (id + 1) + "",'id':id,'type':'orderFood', 'give': 'true', 'item':foodItem });
+		$scope.orders.push({'message':"Give " + foodItem  + " for table " + (id + 1) + "",'id':id,'type':'orderFood', 'give': 'true', 'item':foodItem, command:'Give', table:(id+1) });
 		$scope.tables[id].bill += Math.floor((Math.random() * 20) + 7);
 	}
 
 	$scope.orderDrink = function(id){
 		var foodItem = $scope.drinks[Math.floor(Math.random()* $scope.drinks.length)];
-		$scope.orders.push({'message':"Get " + foodItem + " for table " + (id + 1)+ "",'id':id,type:'orderDrink', give: 'true', item: foodItem  });
+		$scope.orders.push({'message':"Get " + foodItem + " for table " + (id + 1)+ "",'id':id,type:'orderDrink', give: 'true', item: foodItem, command:'Give', table:(id+1)  });
 		$scope.tables[id].bill += Math.floor((Math.random() * 3) + 1);
 	}
 
@@ -48,7 +48,7 @@ angular.module('resturant.robot').controller('ResturantController', function ($s
 		$scope.tables[id].occupied = false;
 		$scope.tables[id].disabled = true;
 		$scope.tables[id].status = 'pending';
-		$scope.orders.push({'message':"Grab check from table " + (id + 1) + "",'id':id,type:'payCheck' });
+		$scope.orders.push({'message':"Grab check from table " + (id + 1) + "",'id':id,type:'payCheck', command: 'Grab', item:"check", table:(id+1) });
 	}
 
 	$scope.updateInterval = function(){
@@ -167,14 +167,14 @@ angular.module('resturant.robot').controller('ResturantController', function ($s
 						if(order.give == 'true'){
 							if(debug)alert('give true');
 							setTimeout(function(){
-								$scope.orders.push({'message':"Get " + order.item + " for table " + (order.id + 1)+ "",'id':order.id,type:'orderFood', give:'false', item:order.item  });
+								$scope.orders.push({'message':"Get " + order.item + " for table " + (order.id + 1)+ "",'id':order.id,type:'orderFood', give:'false', item:order.item, command:"Get" , table: (id+1) });
 							}, 3000);
 						}
 					}else if(order.type == "orderDrink"){
 						if(debug)alert('orderDrink '+order.item);
 						if(order.give == 'true'){
 							setTimeout(function(){
-								$scope.orders.push({'message':"Get " + order.item + " for table " + (order.id + 1)+ "",'id':order.id,type:'orderDrink', give:'false', item:order.item  });
+								$scope.orders.push({'message':"Get " + order.item + " for table " + (order.id + 1)+ "",'id':order.id,type:'orderDrink', give:'false', item:order.item , command:"Get", table:(id+1) });
 							}, 3000);
 						}
 					}
