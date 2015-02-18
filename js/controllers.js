@@ -9,7 +9,7 @@ angular.module('resturant.robot').controller('ResturantController', function ($s
 	];
 
 	var debug = false;
-	var playSounds = true;
+	$scope.playSounds = true;
 	$interval(doWorkSon,1000);
 	var cash = document.getElementById('cash');
 	var promise = $interval(randomSim,15000);
@@ -149,7 +149,7 @@ angular.module('resturant.robot').controller('ResturantController', function ($s
 							jQuery('img:last-child', this).remove();
 						}else if(order.type == 'payCheck'){
 							jQuery('img:last-child', this).remove();
-							if(playSounds) cash.play();
+							if($scope.playSounds) cash.play();
 						}
 						
 						$scope.status.processing = false;

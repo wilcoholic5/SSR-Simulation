@@ -155,6 +155,9 @@
 					<select class="form-control" ng-options="interval.interval as interval.name for interval in intervals" ng-change="updateInterval()" ng-model="currentInterval"></select>
 
 				</div>
+				<div class='sound'>
+					SFX: <input type='checkbox' ng-model='playSounds' />
+				</div>
 			</div>
 
 			<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
