@@ -22,6 +22,7 @@ angular.module('resturant.robot').controller('ResturantController', function ($s
 	$scope.message = 'Idle';
 	$scope.intervals = [{'name':'Busy','interval':3000},{'name':'Moderate','interval':6000},{'name':'Slow','interval':10000}];
 	$scope.currentInterval = 5000;
+	$scope.eatingInterval = 3000;
 
 	$scope.occupy = function(id) {
 		$scope.tables[id].occupied = true;
@@ -167,15 +168,15 @@ angular.module('resturant.robot').controller('ResturantController', function ($s
 						if(order.give == 'true'){
 							if(debug)alert('give true');
 							setTimeout(function(){
-								$scope.orders.push({'message':"Get " + order.item + " for table " + (order.id + 1)+ "",'id':order.id,type:'orderFood', give:'false', item:order.item, command:"Get" , table: (id+1) });
-							}, 3000);
+								$scope.orders.push({'message':"Get " + order.item + " for table " + (order.id + 1),'id':order.id,type:'orderFood', give:'false', item:order.item, command:"Get" , table: (order.id+1) });
+							}, $scope.eatingInterval);
 						}
 					}else if(order.type == "orderDrink"){
 						if(debug)alert('orderDrink '+order.item);
 						if(order.give == 'true'){
 							setTimeout(function(){
-								$scope.orders.push({'message':"Get " + order.item + " for table " + (order.id + 1)+ "",'id':order.id,type:'orderDrink', give:'false', item:order.item , command:"Get", table:(id+1) });
-							}, 3000);
+								$scope.orders.push({'message':"Get " + order.item + " for table " + (order.id + 1),'id':order.id,type:'orderDrink', give:'false', item:order.item , command:"Get", table:(order.id+1) });
+							}, $scope.eatingInterval);
 						}
 					}
 				}
