@@ -14,15 +14,7 @@
 <body>
 	<div ng-controller="ResturantController">
 		<div class="row">
-			<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-				<div class="well">
-					<progressbar ng-repeat="food in kitchenQueue track by $index | orderBy: '-timeleft'" animate="true" ng-if="food" class="progress-striped" value="food.timeleft" type="{{food.status}}">Table {{food.id}} ordered {{food.item}}  {{food.timeleft}}% Done</progressbar>
-				</div>
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-				<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+			<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
 					<div class="panel panel-primary">
 						<div class="panel-heading">
 							<h3 class="panel-title">Table 1 <div ng-show="tables[0].bill > 0"><span>$</span> {{tables[0].bill}}</div></h3>
@@ -32,12 +24,12 @@
 								<button type="button" ng-hide="tables[0].occupied" ng-disabled="tables[0].disabled" class="btn btn-default" data-table="1" ng-click="occupy(0)">Occupy</button>
 								<button type="button" ng-show="tables[0].occupied" class="btn btn-default" data-table="1" ng-click="orderFood(0)">Order Food</button>
 								<button type="button" ng-show="tables[0].occupied" class="btn btn-default" data-table="1" ng-click="orderDrink(0)">Order Drink</button>
-								<button type="button" ng-show="tables[0].bill > 0" ng-click="paybill(0)" class="btn btn-success" data-table="1">Pay Bill</button>
+								<button type="button" ng-show="tables[0].bill > 0" ng-click="paybill(0)" class="btn btn-success" data-table="1" ng-disabled="tables[0].disabled">Pay Bill</button>
 							</div>
 						</div>
 					</div>
 				</div>
-				<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+				<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
 					<div class="panel panel-primary">
 						<div class="panel-heading">
 							<h3 class="panel-title">Table 2 <div ng-show="tables[1].bill > 0"><span>$</span> {{tables[1].bill}}</div></h3>
@@ -47,12 +39,12 @@
 								<button type="button" ng-hide="tables[1].occupied" ng-disabled="tables[1].disabled" class="btn btn-default" data-table="2" ng-click="occupy(1)">Occupy</button>
 								<button type="button" ng-show="tables[1].occupied" class="btn btn-default" data-table="2" ng-click="orderFood(1)">Order Food</button>
 								<button type="button" ng-show="tables[1].occupied" class="btn btn-default" ng-click="orderDrink(1)" data-table="2">Order Drink</button>
-								<button type="button" ng-show="tables[1].bill > 0" ng-click="paybill(1)" class="btn btn-success" data-table="2">Pay Bill</button>
+								<button type="button" ng-show="tables[1].bill > 0" ng-click="paybill(1)" class="btn btn-success" data-table="2" ng-disabled="tables[1].disabled">Pay Bill</button>
 							</div>
 						</div>
 					</div>
 				</div>
-				<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+				<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
 					<div class="panel panel-primary">
 						<div class="panel-heading">
 							<h3 class="panel-title">Table 3 <div ng-show="tables[2].bill > 0"><span>$</span> {{tables[2].bill}}</div></h3>
@@ -62,12 +54,12 @@
 								<button type="button" ng-hide="tables[2].occupied" ng-disabled="tables[2].disabled" class="btn btn-default" data-table="3" ng-click="occupy(2)">Occupy</button>
 								<button type="button" ng-show="tables[2].occupied" class="btn btn-default" data-table="3" ng-click="orderFood(2)">Order Food</button>
 								<button type="button" ng-show="tables[2].occupied" class="btn btn-default" data-table="3" ng-click="orderDrink(2)">Order Drink</button>
-								<button type="button" ng-show="tables[2].bill > 0" ng-click="paybill(2)" class="btn btn-success" data-table="3">Pay Bill</button>
+								<button type="button" ng-show="tables[2].bill > 0" ng-click="paybill(2)" class="btn btn-success" data-table="3" ng-disabled="tables[2].disabled">Pay Bill</button>
 							</div>
 						</div>
 					</div>
 				</div>
-				<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+				<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
 					<div class="panel panel-primary">
 						<div class="panel-heading">
 							<h3 class="panel-title">Table 4 <div ng-show="tables[3].bill > 0"><span>$</span> {{tables[3].bill}}</div></h3>
@@ -77,12 +69,12 @@
 								<button type="button" ng-hide="tables[3].occupied" ng-disabled="tables[3].disabled" class="btn btn-default" data-table="4" ng-click="occupy(3)">Occupy</button>
 								<button type="button" ng-show="tables[3].occupied" class="btn btn-default" data-table="4" ng-click="orderFood(3)">Order Food</button>
 								<button type="button" ng-show="tables[3].occupied" class="btn btn-default" data-table="4" ng-click="orderDrink(3)">Order Drink</button>
-								<button type="button" ng-show="tables[3].bill > 0" ng-click="paybill(3)" class="btn btn-success" data-table="4">Pay Bill</button>
+								<button type="button" ng-show="tables[3].bill > 0" ng-click="paybill(3)" class="btn btn-success" data-table="4" ng-disabled="tables[3].disabled">Pay Bill</button>
 							</div>
 						</div>
 					</div>
 				</div>
-				<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+				<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
 					<div class="panel panel-primary">
 						<div class="panel-heading">
 							<h3 class="panel-title">Table 5 <div ng-show="tables[4].bill > 0"><span>$</span> {{tables[4].bill}}</div></h3>
@@ -92,12 +84,12 @@
 								<button type="button" ng-hide="tables[4].occupied" ng-disabled="tables[4].disabled" class="btn btn-default" data-table="5" ng-click="occupy(4)">Occupy</button>
 								<button type="button" ng-show="tables[4].occupied" class="btn btn-default" data-table="5" ng-click="orderFood(4)">Order Food</button>
 								<button type="button" ng-show="tables[4].occupied" class="btn btn-default" data-table="5" ng-click="orderDrink(4)">Order Drink</button>
-								<button type="button" ng-show="tables[4].bill > 0" ng-click="paybill(4)" class="btn btn-success" data-table="5">Pay Bill</button>
+								<button type="button" ng-show="tables[4].bill > 0" ng-click="paybill(4)" class="btn btn-success" data-table="5" ng-disabled="tables[4].disabled">Pay Bill</button>
 							</div>
 						</div>
 					</div>
 				</div>
-				<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+				<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
 					<div class="panel panel-primary">
 						<div class="panel-heading">
 							<h3 class="panel-title">Table 6 <div ng-show="tables[5].bill > 0"><span>$</span> {{tables[5].bill}}</div></h3>
@@ -107,11 +99,27 @@
 								<button type="button" ng-hide="tables[5].occupied" ng-disabled="tables[5].disabled" class="btn btn-default occupy" data-table="6" ng-click="occupy(5)">Occupy</button>
 								<button type="button" ng-show="tables[5].occupied" class="btn btn-default" data-table="6" ng-click="orderFood(5)">Order Food</button>
 								<button type="button" ng-show="tables[5].occupied" class="btn btn-default" data-table="6" ng-click="orderDrink(5)">Order Drink</button>
-								<button type="button" ng-show="tables[5].bill > 0" ng-click="paybill(5)" class="btn btn-success" data-table="6">Pay Bill</button>
+								<button type="button" ng-show="tables[5].bill > 0" ng-click="paybill(5)" class="btn btn-success" data-table="6" ng-disabled="tables[5].disabled">Pay Bill</button>
 							</div>
 						</div>
 					</div>
 				</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+					<h2>Kitchen Queue</h2>
+					<table class="table table-striped">
+						<thead>
+							<tr><th>Table #</th><th>Food Item</th><th>Progress</th></tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="food in kitchenQueue track by $index | orderBy: '-timeleft'" ng-if="food">
+								<td>Table {{food.id}}</td>
+								<td>{{food.item}}</td>
+								<td><progressbar animate="true" class="progress-striped" value="food.timeleft" type="{{food.status}}">{{food.timeleft}}%</progressbar></td>
+							</tr>	
+						</tbody>
+					</table>
 			</div>
 			<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
 				<div id = "blackbox" >
@@ -169,7 +177,21 @@
 
 			<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
 				<div class="list-group">
-				  <a href="#" class="list-group-item" ng-repeat="order in orders">{{order.command}} <span class='{{order.type}}'>{{order.item}}</span> {{(order.command == ('Give')) ? 'to' : (order.command == ('Grab' || 'Get')) ? 'from' : ''}} table <span class='tableNum'>{{order.table}}</span></a>
+					<h2>Robot Queue</h2>
+					<table class="table table-striped">
+						<thead>
+							<tr><th>Table #</th><th>Food Item</th><th>Action</th></tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="order in orders">
+								<td>{{order.id + 1 }}</td>
+								<td>{{order.item}}</td>
+								<td>{{order.type}}</td>
+							</tr>	
+						</tbody>
+					</table>
+
+				<!--   <a href="#" class="list-group-item" ng-repeat="order in orders">{{order.command}} <span class='{{order.type}}'>{{order.item}}</span> {{(order.command == ('Give')) ? 'to' : (order.command == ('Grab' || 'Get')) ? 'from' : ''}} table <span class='tableNum'>{{order.table}}</span></a> -->
 				</div>
 			</div>
 		</div>

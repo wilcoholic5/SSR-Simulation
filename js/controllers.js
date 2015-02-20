@@ -35,6 +35,8 @@ angular.module('resturant.robot').controller('ResturantController', function ($s
 
 	$scope.orderFood = function(id){
 		var foodItem = $scope.food[Math.floor(Math.random()* $scope.food.length)];
+		$scope.tables[id].bill += Math.floor((Math.random() * 20) + 7);
+		$scope.tables[id].disabled = true;
 		$rootScope.$broadcast('addFood',{'item':foodItem,'id':id,'type':'orderFood','give':'true','item':foodItem,'message':"Give " + foodItem  + " for table " + (id + 1)});
 	}
 
@@ -56,8 +58,8 @@ angular.module('resturant.robot').controller('ResturantController', function ($s
 			if(curTime==100){
 				$scope.orders.push(order);
 				removeFood(id);
+				$scope.tables[args.id].disabled = false;
 				$interval.cancel($scope.promises[id]);
-				$scope.tables[id].bill += Math.floor((Math.random() * 20) + 7);
 			}else{
 				curTime++;
 				$scope.kitchenQueue[id].timeleft = curTime;
