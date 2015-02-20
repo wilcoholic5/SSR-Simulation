@@ -13,7 +13,7 @@ angular.module('resturant.robot').controller('ResturantController', function ($s
 	$interval(doWorkSon,1000);
 	var cash = document.getElementById('cash');
 	var promise = $interval(randomSim,15000);
-	
+
 	$scope.tableID = ["#table1", "#table2", "#table3", "#table4", "#table5", "#table6"];
 
 	$scope.food = ["Pepperoni Pizza", "Fried Chicken", "Alfredo Pasta", "Triple Cheeseburger", "Ice Cream"];
@@ -35,7 +35,6 @@ angular.module('resturant.robot').controller('ResturantController', function ($s
 
 	$scope.orderFood = function(id){
 		var foodItem = $scope.food[Math.floor(Math.random()* $scope.food.length)];
-		$scope.tables[id].bill += Math.floor((Math.random() * 20) + 7);
 		$rootScope.$broadcast('addFood',{'item':foodItem,'id':id,'type':'orderFood','give':'true','item':foodItem,'message':"Give " + foodItem  + " for table " + (id + 1)});
 	}
 
@@ -58,6 +57,7 @@ angular.module('resturant.robot').controller('ResturantController', function ($s
 				$scope.orders.push(order);
 				removeFood(id);
 				$interval.cancel($scope.promises[id]);
+				$scope.tables[id].bill += Math.floor((Math.random() * 20) + 7);
 			}else{
 				curTime++;
 				$scope.kitchenQueue[id].timeleft = curTime;
@@ -137,7 +137,7 @@ angular.module('resturant.robot').controller('ResturantController', function ($s
 			$scope.kitchenQueue.push(order);
 			return $scope.kitchenQueue.length-1;
 		}
-		
+
 	}
 
 	function removeFood(id){
@@ -155,22 +155,22 @@ angular.module('resturant.robot').controller('ResturantController', function ($s
 					var order = $scope.orders.shift();
 					$scope.status.processing = true;
 					$scope.message = order.message;
-					
-					
+
+
 					if(order.type == 'orderFood' && order.give == 'true'){
 						jQuery('.robot').append("<img src='img/fullPlate.png' id='fullPlate' />");
 					}else if(order.type == 'orderDrink' && order.give == 'true'){
 						jQuery('.robot').append("<img src='img/fullCup.png' id='fullCup' />");
 					}
 					// 400px
-					
+
 					var moveRight = Math.abs($('#table'+(order.id+1)).position().left - $('.kitchen').position().left);
 					var moveLeft = -1 * moveRight;
 					if(debug) alert('kitchen top '+ $('.kitchen').position().top);
 					var moveDown = Math.abs($('#table'+(order.id+1)).position().top - $('.kitchen').position().top);
 					var moveUp = -1 * moveDown;
 					if(debug) alert('movedown '+moveDown);
-					
+
 					jQuery('.robot').animate({left:moveLeft}, 1500);
 					//jQuery('.robot').animate({top:$('.kitchen').position().top,left:$('#table'+(order.id+1)).position().left},1500);
 					//jQuery('.robot').animate({top:$('#table'+(order.id+1)).position().top,left:$('#table'+(order.id+1)).position().left},1500, function(){
@@ -197,7 +197,7 @@ angular.module('resturant.robot').controller('ResturantController', function ($s
 							jQuery('img:last-child', this).remove();
 							if($scope.playSounds) cash.play();
 						}
-						
+
 						$scope.status.processing = false;
 						if(order.type=='payCheck'){
 							$scope.tables[order.id].disabled = false;
@@ -205,8 +205,8 @@ angular.module('resturant.robot').controller('ResturantController', function ($s
 						}
 						$scope.message = 'Idle';
 					});
-					
-					
+
+
 					//This is to see once the food has been delivered then it will countdown a time for user to eat then to pick up empty plate.
 					if(order.type == "orderFood"){
 						if(debug) alert('orderFood '+order.item);
