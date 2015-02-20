@@ -9,7 +9,7 @@ angular.module('resturant.robot').controller('ResturantController', function ($s
 	];
 
 	var debug = false;
-	var playSounds = true;
+	$scope.playSounds = true;
 	$interval(doWorkSon,1000);
 	var cash = document.getElementById('cash');
 	var promise = $interval(randomSim,15000);
@@ -21,15 +21,16 @@ angular.module('resturant.robot').controller('ResturantController', function ($s
 	$scope.orders = [];
 	$scope.kitchenQueue = [];
 	$scope.message = 'Idle';
-	$scope.intervals = [{'name':'Busy','interval':5000},{'name':'Moderate','interval':10000},{'name':'Slow','interval':15000}];
+	$scope.intervals = [{'name':'Busy','interval':3000},{'name':'Moderate','interval':6000},{'name':'Slow','interval':10000}];
 	$scope.currentInterval = 5000;
 	$scope.promises = [];
+	$scope.eatingInterval = 3000;
 
 	$scope.occupy = function(id) {
 		$scope.tables[id].occupied = true;
 		$scope.tables[id].status = 'occupied';
 		$scope.tables[id].bill = 0;
-		$scope.orders.push({'message':'Greet table '+(id+1),'id':id,type:'occupy'});
+		$scope.orders.push({'message':"Greet table "+(id+1) + "",'id':id,type:'occupy', command:'Greet', table:(id+1)});
 	};
 
 	$scope.orderFood = function(id){
@@ -67,7 +68,7 @@ angular.module('resturant.robot').controller('ResturantController', function ($s
 
 	$scope.orderDrink = function(id){
 		var foodItem = $scope.drinks[Math.floor(Math.random()* $scope.drinks.length)];
-		$scope.orders.push({'message':"Get " + foodItem + " for table " + (id + 1),'id':id,type:'orderDrink', give: 'true', item: foodItem  });
+		$scope.orders.push({'message':"Get " + foodItem + " for table " + (id + 1)+ "",'id':id,type:'orderDrink', give: 'true', item: foodItem, command:'Give', table:(id+1)  });
 		$scope.tables[id].bill += Math.floor((Math.random() * 3) + 1);
 	}
 
@@ -77,7 +78,7 @@ angular.module('resturant.robot').controller('ResturantController', function ($s
 		$scope.tables[id].occupied = false;
 		$scope.tables[id].disabled = true;
 		$scope.tables[id].status = 'pending';
-		$scope.orders.push({'message':"Grab check from table " + (id + 1),'id':id,type:'payCheck' });
+		$scope.orders.push({'message':"Grab check from table " + (id + 1) + "",'id':id,type:'payCheck', command: 'Grab', item:"check", table:(id+1) });
 	}
 
 	$scope.updateInterval = function(){
@@ -194,7 +195,7 @@ angular.module('resturant.robot').controller('ResturantController', function ($s
 							jQuery('img:last-child', this).remove();
 						}else if(order.type == 'payCheck'){
 							jQuery('img:last-child', this).remove();
-							if(playSounds) cash.play();
+							if($scope.playSounds) cash.play();
 						}
 						
 						$scope.status.processing = false;
@@ -212,15 +213,15 @@ angular.module('resturant.robot').controller('ResturantController', function ($s
 						if(order.give == 'true'){
 							if(debug)alert('give true');
 							setTimeout(function(){
-								$scope.orders.push({'message':"Get " + order.item + " for table " + (order.id + 1),'id':order.id,type:'orderFood', give:'false', item:order.item  });
-							}, 3000);
+								$scope.orders.push({'message':"Get " + order.item + " for table " + (order.id + 1),'id':order.id,type:'orderFood', give:'false', item:order.item, command:"Get" , table: (order.id+1) });
+							}, $scope.eatingInterval);
 						}
 					}else if(order.type == "orderDrink"){
 						if(debug)alert('orderDrink '+order.item);
 						if(order.give == 'true'){
 							setTimeout(function(){
-								$scope.orders.push({'message':"Get " + order.item + " for table " + (order.id + 1),'id':order.id,type:'orderDrink', give:'false', item:order.item  });
-							}, 3000);
+								$scope.orders.push({'message':"Get " + order.item + " for table " + (order.id + 1),'id':order.id,type:'orderDrink', give:'false', item:order.item , command:"Get", table:(order.id+1) });
+							}, $scope.eatingInterval);
 						}
 					}
 				}
