@@ -22,7 +22,7 @@ angular.module('resturant.robot').controller('ResturantController', function ($s
 	$scope.kitchenQueue = [];
 	$scope.message = 'Idle';
 	$scope.intervals = [{'name':'Busy','interval':3000},{'name':'Moderate','interval':6000},{'name':'Slow','interval':10000}];
-	$scope.currentInterval = 5000;
+	$scope.currentInterval = 3000;
 	$scope.promises = [];
 	$scope.eatingInterval = 3000;
 
