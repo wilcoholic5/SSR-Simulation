@@ -14,6 +14,13 @@
 <body>
 	<div ng-controller="ResturantController">
 		<div class="row">
+			<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+				<div class="well">
+					<progressbar ng-repeat="food in kitchenQueue track by $index | orderBy: '-timeleft'" animate="true" ng-if="food" class="progress-striped" value="food.timeleft" type="{{food.status}}">Table {{food.id}} ordered {{food.item}}  {{food.timeleft}}% Done</progressbar>
+				</div>
+			</div>
+		</div>
+		<div class="row">
 			<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
 				<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
 					<div class="panel panel-primary">

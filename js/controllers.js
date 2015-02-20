@@ -1,4 +1,4 @@
-angular.module('resturant.robot').controller('ResturantController', function ($scope,$interval) {
+angular.module('resturant.robot').controller('ResturantController', function ($scope,$rootScope,$interval,$timeout) {
 	$scope.tables = [
 	{'occupied':false,'disabled':false,'status':'empty'},
 	{'occupied':false,'disabled':false,'status':'empty'},
@@ -19,9 +19,11 @@ angular.module('resturant.robot').controller('ResturantController', function ($s
 	$scope.food = ["Pepperoni Pizza", "Fried Chicken", "Alfredo Pasta", "Triple Cheeseburger", "Ice Cream"];
 	$scope.drinks = ["Coca-Cola", "Water", "Tea", "Sprite", "Milkshake"];
 	$scope.orders = [];
+	$scope.kitchenQueue = [];
 	$scope.message = 'Idle';
 	$scope.intervals = [{'name':'Busy','interval':5000},{'name':'Moderate','interval':10000},{'name':'Slow','interval':15000}];
 	$scope.currentInterval = 5000;
+	$scope.promises = [];
 
 	$scope.occupy = function(id) {
 		$scope.tables[id].occupied = true;
@@ -32,9 +34,36 @@ angular.module('resturant.robot').controller('ResturantController', function ($s
 
 	$scope.orderFood = function(id){
 		var foodItem = $scope.food[Math.floor(Math.random()* $scope.food.length)];
-		$scope.orders.push({'message':"Give " + foodItem  + " for table " + (id + 1),'id':id,'type':'orderFood', 'give': 'true', 'item':foodItem });
 		$scope.tables[id].bill += Math.floor((Math.random() * 20) + 7);
+		$rootScope.$broadcast('addFood',{'item':foodItem,'id':id,'type':'orderFood','give':'true','item':foodItem,'message':"Give " + foodItem  + " for table " + (id + 1)});
 	}
+
+	$scope.$on('addFood',function(event,args){
+		var curTime = 0;
+		var id = addfood({'item':args.item,'time':0,'id':args.id + 1,'status':'danger'});
+		var order = args;
+
+		$scope.promises[id] = $interval(function(){
+			console.log($scope.kitchenQueue[id]);
+			if(curTime>50){
+				$scope.kitchenQueue[id].status = 'warning';
+			}
+
+			if(curTime>85){
+				$scope.kitchenQueue[id].status = 'success';
+			}
+
+			if(curTime==100){
+				$scope.orders.push(order);
+				removeFood(id);
+				$interval.cancel($scope.promises[id]);
+			}else{
+				curTime++;
+				$scope.kitchenQueue[id].timeleft = curTime;
+			}
+		},200);
+
+	});
 
 	$scope.orderDrink = function(id){
 		var foodItem = $scope.drinks[Math.floor(Math.random()* $scope.drinks.length)];
@@ -96,6 +125,22 @@ angular.module('resturant.robot').controller('ResturantController', function ($s
 		}else{
 			var id = Math.floor((Math.random() * 6));
 		}
+	}
+
+	function addfood(order){
+		var id = $scope.kitchenQueue.indexOf(null);
+		if(id > -1){
+			$scope.kitchenQueue[id] = order;
+        	return id;
+		}else{
+			$scope.kitchenQueue.push(order);
+			return $scope.kitchenQueue.length-1;
+		}
+		
+	}
+
+	function removeFood(id){
+		$scope.kitchenQueue[id] = null;
 	}
 
 	function doWorkSon(){
