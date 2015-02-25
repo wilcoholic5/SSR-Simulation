@@ -37,13 +37,14 @@ angular.module('resturant.robot').controller('ResturantController', function ($s
 		var foodItem = $scope.food[Math.floor(Math.random()* $scope.food.length)];
 		$scope.tables[id].bill += Math.floor((Math.random() * 20) + 7);
 		$scope.tables[id].disabled = true;
-		$rootScope.$broadcast('addFood',{'item':foodItem,'id':id,'type':'orderFood','give':'true','item':foodItem,'message':"Give " + foodItem  + " for table " + (id + 1)});
+		$rootScope.$broadcast('addFood',{'command':'Give Food','item':foodItem,'id':id,'type':'orderFood','give':'true','message':"Give " + foodItem  + " for table " + (id + 1)});
 	}
 
 	$scope.$on('addFood',function(event,args){
 		var curTime = 0;
 		var id = addfood({'item':args.item,'time':0,'id':args.id + 1,'status':'danger'});
 		var order = args;
+		var randomTime = Math.floor((Math.random() * 400) + 50);
 
 		$scope.promises[id] = $interval(function(){
 			console.log($scope.kitchenQueue[id]);
@@ -64,13 +65,13 @@ angular.module('resturant.robot').controller('ResturantController', function ($s
 				curTime++;
 				$scope.kitchenQueue[id].timeleft = curTime;
 			}
-		},200);
+		},randomTime);
 
 	});
 
 	$scope.orderDrink = function(id){
 		var foodItem = $scope.drinks[Math.floor(Math.random()* $scope.drinks.length)];
-		$scope.orders.push({'message':"Get " + foodItem + " for table " + (id + 1)+ "",'id':id,type:'orderDrink', give: 'true', item: foodItem, command:'Give', table:(id+1)  });
+		$scope.orders.push({'message':"Get " + foodItem + " for table " + (id + 1)+ "",'id':id,type:'orderDrink', give: 'true', item: foodItem, command:'Give Drink', table:(id+1)  });
 		$scope.tables[id].bill += Math.floor((Math.random() * 3) + 1);
 	}
 
@@ -80,7 +81,7 @@ angular.module('resturant.robot').controller('ResturantController', function ($s
 		$scope.tables[id].occupied = false;
 		$scope.tables[id].disabled = true;
 		$scope.tables[id].status = 'pending';
-		$scope.orders.push({'message':"Grab check from table " + (id + 1) + "",'id':id,type:'payCheck', command: 'Grab', item:"check", table:(id+1) });
+		$scope.orders.push({'message':"Grab check from table " + (id + 1) + "",'id':id,type:'payCheck', command: 'Grab Check', item:"check", table:(id+1) });
 	}
 
 	$scope.updateInterval = function(){
@@ -215,14 +216,14 @@ angular.module('resturant.robot').controller('ResturantController', function ($s
 						if(order.give == 'true'){
 							if(debug)alert('give true');
 							setTimeout(function(){
-								$scope.orders.push({'message':"Get " + order.item + " for table " + (order.id + 1),'id':order.id,type:'orderFood', give:'false', item:order.item, command:"Get" , table: (order.id+1) });
+								$scope.orders.push({'message':"Get " + order.item + " from table " + (order.id + 1),'id':order.id,type:'orderFood', give:'false', item:order.item, command:"Get Food" , table: (order.id+1) });
 							}, $scope.eatingInterval);
 						}
 					}else if(order.type == "orderDrink"){
 						if(debug)alert('orderDrink '+order.item);
 						if(order.give == 'true'){
 							setTimeout(function(){
-								$scope.orders.push({'message':"Get " + order.item + " for table " + (order.id + 1),'id':order.id,type:'orderDrink', give:'false', item:order.item , command:"Get", table:(order.id+1) });
+								$scope.orders.push({'message':"Get " + order.item + " from table " + (order.id + 1),'id':order.id,type:'orderDrink', give:'false', item:order.item , command:"Get Drink", table:(order.id+1) });
 							}, $scope.eatingInterval);
 						}
 					}
