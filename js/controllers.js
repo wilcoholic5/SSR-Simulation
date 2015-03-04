@@ -1,4 +1,8 @@
 angular.module('resturant.robot').controller('ResturantController', function ($scope,$rootScope,$interval,$timeout) {
+	$scope.conn = new WebSocket("ws://localhost:8080");
+	$scope.conn.onopen = function(e) {
+		console.log("connected to the database");
+	};
 	$scope.tables = [
 	{'occupied':false,'disabled':false,'status':'empty','visit':{}},
 	{'occupied':false,'disabled':false,'status':'empty','visit':{}},
@@ -76,7 +80,7 @@ angular.module('resturant.robot').controller('ResturantController', function ($s
 
 	$scope.orderDrink = function(id){
 		var foodItem = $scope.drinks[Math.floor(Math.random()* $scope.drinks.length)];
-		$scope.tables[id].visit.orders.drinks.push({"name":foodItem,"price":foodItem.price});
+		$scope.tables[id].visit.orders.drinks.push({"name":foodItem.name,"price":foodItem.price});
 		$scope.orders.push({'message':"Get " + foodItem.name + " for table " + (id + 1)+ "",'id':id,type:'orderDrink', give: 'true', item: foodItem.name, command:'Give Drink', table:(id+1)  });
 		var price = foodItem.price
 		$scope.tables[id].bill += price;
@@ -214,14 +218,14 @@ angular.module('resturant.robot').controller('ResturantController', function ($s
 							$scope.tables[order.id].disabled = false;
 							$scope.tables[order.id].status = 'empty';
 							$scope.visits.push(angular.toJson($scope.tables[order.id].visit, false));
-							console.log($scope.tables[order.id].visit);
-							$scope.tables[order.id].visit = {};
 
 							//SEND VISIT JSON TO NEO4j
-							//$scope.tables[order.id].visit
+							$scope.tables[order.id].visit
+							console.log(JSON.stringify($scope.tables[order.id].visit));
+							$scope.conn.send(JSON.stringify($scope.tables[order.id].visit));
 							//Empty the visit for table after sending json 
 							//$scope.tables[order.id].visit = {};
-							
+							$scope.tables[order.id].visit = {};
 						}
 						$scope.message = 'Idle';
 					});
