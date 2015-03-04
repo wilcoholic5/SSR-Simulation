@@ -1,12 +1,14 @@
 angular.module('resturant.robot').controller('ResturantController', function ($scope,$rootScope,$interval,$timeout) {
 	$scope.tables = [
-	{'occupied':false,'disabled':false,'status':'empty'},
-	{'occupied':false,'disabled':false,'status':'empty'},
-	{'occupied':false,'disabled':false,'status':'empty'},
-	{'occupied':false,'disabled':false,'status':'empty'},
-	{'occupied':false,'disabled':false,'status':'empty'},
-	{'occupied':false,'disabled':false,'status':'empty'}
+	{'occupied':false,'disabled':false,'status':'empty','visit':{}},
+	{'occupied':false,'disabled':false,'status':'empty','visit':{}},
+	{'occupied':false,'disabled':false,'status':'empty','visit':{}},
+	{'occupied':false,'disabled':false,'status':'empty','visit':{}},
+	{'occupied':false,'disabled':false,'status':'empty','visit':{}},
+	{'occupied':false,'disabled':false,'status':'empty','visit':{}}
 	];
+
+	$scope.visits = [];
 
 	var debug = false;
 	$scope.playSounds = true;
@@ -27,6 +29,7 @@ angular.module('resturant.robot').controller('ResturantController', function ($s
 	$scope.eatingInterval = 3000;
 
 	$scope.occupy = function(id) {
+		$scope.tables[id].visit = {"table":id+1,"orders":{'foods':[],"drinks":[]},"bill":0};
 		$scope.tables[id].occupied = true;
 		$scope.tables[id].status = 'occupied';
 		$scope.tables[id].bill = 0;
@@ -35,7 +38,9 @@ angular.module('resturant.robot').controller('ResturantController', function ($s
 
 	$scope.orderFood = function(id){
 		var foodItem = $scope.food[Math.floor(Math.random()* $scope.food.length)];
-		$scope.tables[id].bill += Math.floor((Math.random() * 20) + 7);
+		var price =Math.floor((Math.random() * 20) + 7);
+		$scope.tables[id].bill += price;
+		$scope.tables[id].visit.bill += price;
 		$scope.tables[id].disabled = true;
 		$rootScope.$broadcast('addFood',{'command':'Give Food','item':foodItem,'id':id,'type':'orderFood','give':'true','message':"Give " + foodItem  + " for table " + (id + 1)});
 	}
@@ -58,6 +63,7 @@ angular.module('resturant.robot').controller('ResturantController', function ($s
 
 			if(curTime==100){
 				$scope.orders.push(order);
+				$scope.tables[args.id].visit.orders.foods.push({"name":order.item});
 				removeFood(id);
 				$scope.tables[args.id].disabled = false;
 				$interval.cancel($scope.promises[id]);
@@ -71,8 +77,11 @@ angular.module('resturant.robot').controller('ResturantController', function ($s
 
 	$scope.orderDrink = function(id){
 		var foodItem = $scope.drinks[Math.floor(Math.random()* $scope.drinks.length)];
+		$scope.tables[id].visit.orders.drinks.push({"name":foodItem});
 		$scope.orders.push({'message':"Get " + foodItem + " for table " + (id + 1)+ "",'id':id,type:'orderDrink', give: 'true', item: foodItem, command:'Give Drink', table:(id+1)  });
-		$scope.tables[id].bill += Math.floor((Math.random() * 3) + 1);
+		var price = Math.floor((Math.random() * 3) + 1);
+		$scope.tables[id].bill += price;
+		$scope.tables[id].visit.bill += price;
 	}
 
 
@@ -205,6 +214,14 @@ angular.module('resturant.robot').controller('ResturantController', function ($s
 						if(order.type=='payCheck'){
 							$scope.tables[order.id].disabled = false;
 							$scope.tables[order.id].status = 'empty';
+							$scope.visits.push(angular.toJson($scope.tables[order.id].visit, false));
+							$scope.tables[order.id].visit = {};
+
+							//SEND VISIT JSON TO NEO4j
+							//$scope.tables[order.id].visit
+							//Empty the visit for table after sending json 
+							//$scope.tables[order.id].visit = {};
+							
 						}
 						$scope.message = 'Idle';
 					});
