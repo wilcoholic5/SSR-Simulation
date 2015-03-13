@@ -12,98 +12,98 @@
 
 </head>
 <body>
+	<script type="text/ng-template" id="myModalContent.html">
+        <div class="modal-header">
+            <h3 class="modal-title">Table {{tablenum}}</h3>
+            <h1>Menu</h1>
+        </div>
+        <div class="modal-body">
+        	<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+        		<table class="table table-striped table-hover">
+        			<thead>
+        				<tr>
+        					<th>Food</th>
+        					<th>Price</th>
+        					<th>Quantity</th>
+        				</tr>
+        			</thead>
+        			<tbody>
+        				<tr ng-repeat="(key,food) in foods">
+        					<td>{{food.name}}</td>
+        					<td>${{food.price}}</td>
+        					<td><select ng-model="food.quantity" ng-options="num for num in range()" ng-change="updateOrder()"></select></td>
+        				</tr>
+        			</tbody>
+        		</table>
+        	</div>
+        	<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+        		<table class="table table-striped table-hover">
+        			<thead>
+        				<tr>
+        					<th>Drink</th>
+        					<th>Price</th>
+        					<th>Quantity</th>
+        				</tr>
+        			</thead>
+        			<tbody>
+        				<tr ng-repeat="(key,drink) in drinks">
+        					<td>{{drink.name}}</td>
+        					<td>${{drink.price}}</td>
+        					<td><select ng-model="drink.quantity" ng-options="num for num in range()" ng-change="updateOrder()"></select></td>
+        				</tr>
+        			</tbody>
+        		</table>
+        	</div>
+        	<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" ng-show="foodOrders.length > 0 || drinkOrders.length >0">
+        		<h1>Order Summary</h1>
+        		<div ng-show="foodOrders.length > 0">
+	        		<h3>Food Orders</h3>
+	        		<ul class="list-group">
+	        			<li class="list-group-item" ng-repeat="food in foodOrders">
+						    <span class="badge">${{food.price}} x {{food.quantity}}</span>
+						    {{food.name}}
+						</li>
+	        		</ul>
+        		</div>
+        		<div ng-show="drinkOrders.length > 0">
+	        		<h3>Drink Orders</h3>
+	        		<ul class="list-group">
+	        			<li class="list-group-item" ng-repeat="drink in drinkOrders">
+						    <span class="badge">${{drink.price}} x {{drink.quantity}}</span>
+						    {{drink.name}}
+						</li>
+	        		</ul>
+        		</div>
+        	</div>
+        	<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+
+        		<h3><span class="label label-default"> Current Order: ${{bill}} </span></h3>
+        		<h3 ng-show="previousBill > 0"><span class="label label-info">  Previous Bill: ${{previousBill}}</span></h3>
+        		<h1><span class="label label-success">  Total Bill: ${{bill + previousBill}} </span></h1>
+
+        	</div>
+        </div>
+        <div class="modal-footer">
+        	<button class="btn btn-success" ng-disabled="!canPay" ng-show="previousBill > 0" ng-click="pay()">Pay Bill</button>
+        	<button class="btn btn-primary" ng-click="order()">Place Order</button>
+            <button class="btn btn-primary" ng-click="done()">Go Back</button>
+        </div>
+    </script>
 	<div ng-controller="ResturantController">
 		<div class="row">
-			<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+			<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2" ng-repeat="(key,table) in tables">
 					<div class="panel panel-primary">
 						<div class="panel-heading">
-							<h3 class="panel-title">Table 1 <div ng-show="tables[0].bill > 0"><span>$</span> {{tables[0].bill}}</div></h3>
+							<h3 class="panel-title">Table {{key+1}} <div ng-show="table.bill > 0"><span>$</span> {{table.bill}}</div></h3>
 						</div>
 						<div class="panel-body">
 							<div class="btn-group-vertical" role="group" aria-label="...">
-								<button type="button" ng-hide="tables[0].occupied" ng-disabled="tables[0].disabled" class="btn btn-default" data-table="1" ng-click="occupy(0)">Occupy</button>
-								<button type="button" ng-show="tables[0].occupied" class="btn btn-default" data-table="1" ng-click="orderFood(0)">Order Food</button>
-								<button type="button" ng-show="tables[0].occupied" class="btn btn-default" data-table="1" ng-click="orderDrink(0)">Order Drink</button>
-								<button type="button" ng-show="tables[0].bill > 0" ng-click="paybill(0)" class="btn btn-success" data-table="1" ng-disabled="tables[0].disabled">Pay Bill</button>
+								<button type="button" ng-hide="table.occupied" ng-disabled="table.disabled" class="btn btn-default"ng-click="occupy(key)">Occupy</button>
+								<button type="button" ng-show="table.occupied" ng-click="open('lg',key)" class="btn btn-primary">Open UI</button>
 							</div>
 						</div>
 					</div>
-				</div>
-				<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
-					<div class="panel panel-primary">
-						<div class="panel-heading">
-							<h3 class="panel-title">Table 2 <div ng-show="tables[1].bill > 0"><span>$</span> {{tables[1].bill}}</div></h3>
-						</div>
-						<div class="panel-body">
-							<div class="btn-group-vertical" role="group" aria-label="...">
-								<button type="button" ng-hide="tables[1].occupied" ng-disabled="tables[1].disabled" class="btn btn-default" data-table="2" ng-click="occupy(1)">Occupy</button>
-								<button type="button" ng-show="tables[1].occupied" class="btn btn-default" data-table="2" ng-click="orderFood(1)">Order Food</button>
-								<button type="button" ng-show="tables[1].occupied" class="btn btn-default" ng-click="orderDrink(1)" data-table="2">Order Drink</button>
-								<button type="button" ng-show="tables[1].bill > 0" ng-click="paybill(1)" class="btn btn-success" data-table="2" ng-disabled="tables[1].disabled">Pay Bill</button>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
-					<div class="panel panel-primary">
-						<div class="panel-heading">
-							<h3 class="panel-title">Table 3 <div ng-show="tables[2].bill > 0"><span>$</span> {{tables[2].bill}}</div></h3>
-						</div>
-						<div class="panel-body">
-							<div class="btn-group-vertical" role="group" aria-label="...">
-								<button type="button" ng-hide="tables[2].occupied" ng-disabled="tables[2].disabled" class="btn btn-default" data-table="3" ng-click="occupy(2)">Occupy</button>
-								<button type="button" ng-show="tables[2].occupied" class="btn btn-default" data-table="3" ng-click="orderFood(2)">Order Food</button>
-								<button type="button" ng-show="tables[2].occupied" class="btn btn-default" data-table="3" ng-click="orderDrink(2)">Order Drink</button>
-								<button type="button" ng-show="tables[2].bill > 0" ng-click="paybill(2)" class="btn btn-success" data-table="3" ng-disabled="tables[2].disabled">Pay Bill</button>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
-					<div class="panel panel-primary">
-						<div class="panel-heading">
-							<h3 class="panel-title">Table 4 <div ng-show="tables[3].bill > 0"><span>$</span> {{tables[3].bill}}</div></h3>
-						</div>
-						<div class="panel-body">
-							<div class="btn-group-vertical" role="group" aria-label="...">
-								<button type="button" ng-hide="tables[3].occupied" ng-disabled="tables[3].disabled" class="btn btn-default" data-table="4" ng-click="occupy(3)">Occupy</button>
-								<button type="button" ng-show="tables[3].occupied" class="btn btn-default" data-table="4" ng-click="orderFood(3)">Order Food</button>
-								<button type="button" ng-show="tables[3].occupied" class="btn btn-default" data-table="4" ng-click="orderDrink(3)">Order Drink</button>
-								<button type="button" ng-show="tables[3].bill > 0" ng-click="paybill(3)" class="btn btn-success" data-table="4" ng-disabled="tables[3].disabled">Pay Bill</button>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
-					<div class="panel panel-primary">
-						<div class="panel-heading">
-							<h3 class="panel-title">Table 5 <div ng-show="tables[4].bill > 0"><span>$</span> {{tables[4].bill}}</div></h3>
-						</div>
-						<div class="panel-body">
-							<div class="btn-group-vertical" role="group" aria-label="...">
-								<button type="button" ng-hide="tables[4].occupied" ng-disabled="tables[4].disabled" class="btn btn-default" data-table="5" ng-click="occupy(4)">Occupy</button>
-								<button type="button" ng-show="tables[4].occupied" class="btn btn-default" data-table="5" ng-click="orderFood(4)">Order Food</button>
-								<button type="button" ng-show="tables[4].occupied" class="btn btn-default" data-table="5" ng-click="orderDrink(4)">Order Drink</button>
-								<button type="button" ng-show="tables[4].bill > 0" ng-click="paybill(4)" class="btn btn-success" data-table="5" ng-disabled="tables[4].disabled">Pay Bill</button>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
-					<div class="panel panel-primary">
-						<div class="panel-heading">
-							<h3 class="panel-title">Table 6 <div ng-show="tables[5].bill > 0"><span>$</span> {{tables[5].bill}}</div></h3>
-						</div>
-						<div class="panel-body">
-							<div class="btn-group-vertical" role="group" aria-label="...">
-								<button type="button" ng-hide="tables[5].occupied" ng-disabled="tables[5].disabled" class="btn btn-default occupy" data-table="6" ng-click="occupy(5)">Occupy</button>
-								<button type="button" ng-show="tables[5].occupied" class="btn btn-default" data-table="6" ng-click="orderFood(5)">Order Food</button>
-								<button type="button" ng-show="tables[5].occupied" class="btn btn-default" data-table="6" ng-click="orderDrink(5)">Order Drink</button>
-								<button type="button" ng-show="tables[5].bill > 0" ng-click="paybill(5)" class="btn btn-success" data-table="6" ng-disabled="tables[5].disabled">Pay Bill</button>
-							</div>
-						</div>
-					</div>
-				</div>
+			</div>
 		</div>
 		<div class="row">
 			<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4" style="overflow: auto; height:600px">
@@ -190,62 +190,11 @@
 						</tbody>
 					</table>
 			</div>
-			<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-				{{visits}}
-			</div>
 		</div>
+		<!-- <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+			<button type="button" class="btn btn-large btn-block btn-danger" ng-click="stressTest()">STRESS TEST!!</button>
+		</div> -->
 	</div>
-
-
-
-
-<script type="text/javascript">
-	// var queue = [];
-	// $('.occupy').click(function(){
-	// 	var panel = $(this).parent().parent().parent();
-	// 	panel.removeClass('panel-primary').addClass('panel-success');
-	// 	queue.push({'message':'Greet Table' + $(this).attr('table'),'table':$(this).attr('table') });
-	// });
-
-
-	// jQuery('.occupy.table1').click(function(){
-	// 	jQuery('#table1').css({"border-color": "white",
- //             "border-width":"3px",
- //             "border-style":"solid"});
-	// 	jQuery('.orderDrink.table1').show();
-	// 	jQuery('.orderFood.table1').show();
-	// 	jQuery('.occupy.table1').hide();
-	// 	// jQuery('.robot').animate({top:$('#table1').position().top,left:$('#table1').position().left});
-	// 	// jQuery('.robot').animate({top:'430px',left:'250px'});
-	// });
-
-	// jQuery('.orderDrink.table1').click(function(){
-	// 	jQuery('.robot').animate({top:$('#table1').position().top,left:$('#table1').position().left},700);
-	// 	jQuery('.robot').animate({top:'430px',left:'250px'},700);
-	// 	jQuery('.payCheck.table1').show();
-	// });
-
-	// jQuery('.orderFood.table1').click(function(){
-	// 	jQuery('.robot').animate({top:$('#table1').position().top,left:$('#table1').position().left},700);
-	// 	jQuery('.robot').animate({top:'430px',left:'250px'},700);
-	// 	jQuery('.payCheck.table1').show();
-	// });
-
-	// jQuery('.payCheck.table1').click(function(){
-	// 	jQuery('.robot').animate({top:$('#table1').position().top,left:$('#table1').position().left},700);
-	// 	jQuery('#table1').css({"border":"none"});
-	// 	jQuery('.robot').animate({top:'430px',left:'250px'},700);
-	// 	jQuery('.orderDrink.table1').hide();
-	// 	jQuery('.orderFood.table1').hide();
-	// 	jQuery('.payCheck.table1').hide();
-	// 	jQuery('.occupy.table1').show();
-	// })
-
-
-
-
-
-</script>
 
 </body>
 </html>
